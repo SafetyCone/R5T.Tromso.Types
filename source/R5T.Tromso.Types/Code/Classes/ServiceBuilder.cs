@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace R5T.Tromso.Types
 {
-    public class ServiceBuilder : IServiceBuilder
+    public class ServiceBuilder : IServiceBuilder<IServiceProvider>
     {
         private List<Action<IConfigurationBuilder, IServiceProvider>> ConfigureConfigurationActions { get; } = new List<Action<IConfigurationBuilder, IServiceProvider>>();
         private List<Action<IServiceCollection>> ConfigureServicesActions { get; } = new List<Action<IServiceCollection>>();
@@ -55,6 +55,12 @@ namespace R5T.Tromso.Types
             {
                 action(serviceProvider);
             }
+        }
+
+        public IServiceProvider GetResult()
+        {
+            var serviceProvider = this.BuildableService.ServiceProvider;
+            return serviceProvider;
         }
     }
 }
