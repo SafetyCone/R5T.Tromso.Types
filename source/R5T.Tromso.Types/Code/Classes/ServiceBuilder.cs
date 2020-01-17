@@ -12,7 +12,14 @@ namespace R5T.Tromso.Types
         private List<Action<IConfigurationBuilder, IServiceProvider>> ConfigureConfigurationActions { get; } = new List<Action<IConfigurationBuilder, IServiceProvider>>();
         private List<Action<IServiceCollection>> ConfigureServicesActions { get; } = new List<Action<IServiceCollection>>();
         private List<Action<IServiceProvider>> ConfigureActions { get; } = new List<Action<IServiceProvider>>();
-        
+
+        private IBuildableService BuildableService { get; }
+
+
+        public ServiceBuilder(IBuildableService buildableService)
+        {
+            this.BuildableService = buildableService;
+        }
 
         public void AddConfigureConfiguration(Action<IConfigurationBuilder, IServiceProvider> configureConfigurationAction)
         {
@@ -29,21 +36,21 @@ namespace R5T.Tromso.Types
             this.ConfigureActions.Add(configureAction);
         }
 
-        public void Build(IBuildableService buildableService, IServiceProvider configurationServiceProvider)
+        public void Build(IServiceProvider configurationServiceProvider)
         {
-            var configurationBuilder = buildableService.ConfigurationBuilder;
+            var configurationBuilder = this.BuildableService.ConfigurationBuilder;
             foreach (var action in this.ConfigureConfigurationActions)
             {
                 action(configurationBuilder, configurationServiceProvider);
             }
 
-            var servicesollection = buildableService.ServiceCollection;
+            var servicesollection = this.BuildableService.ServiceCollection;
             foreach (var action in this.ConfigureServicesActions)
             {
                 action(servicesollection);
             }
 
-            var serviceProvider = buildableService.ServiceProvider;
+            var serviceProvider = this.BuildableService.ServiceProvider;
             foreach (var action in this.ConfigureActions)
             {
                 action(serviceProvider);
