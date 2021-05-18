@@ -9,7 +9,7 @@ namespace R5T.Tromso
     {
         public static void Build(this IServiceBuilder serviceBuilder)
         {
-            serviceBuilder.Build(ServiceProviderHelper.EmptyServiceProvider.Value);
+            serviceBuilder.Build(ServiceProviderHelper.GetNewEmptyServiceProvider());
         }
 
         public static IServiceBuilder<TService> BuildFluent<TService>(this IServiceBuilder<TService> serviceBuilder)
